@@ -5,11 +5,6 @@ const cheerio = require("cheerio");
 var fs = require('fs');
 var converter = require('json-2-csv');
 
-function display(){
-    console.log("ddd")
-    console.log(results)
-}
-
 var list = [
 //seeds
     {url: "https://www.americanmeadows.com/wildflower-seeds/wildflower-mix/show/all"},
