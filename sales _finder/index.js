@@ -1,5 +1,4 @@
 "use strict"
-
 var request = require('request');
 const req = require("tinyreq");
 const cheerio = require("cheerio");
@@ -27,7 +26,7 @@ var list = [
     {url: "https://www.americanmeadows.com/grass-and-groundcover-seeds/pasture-grass-seeds/show/all"},
     {url: "https://www.americanmeadows.com/grass-and-groundcover-seeds/native-grass-seed/show/all"},
 
-//perennials
+// //perennials
     {url: "https://www.americanmeadows.com/perennials/unique-perennials/show/all"},
     {url: "https://www.americanmeadows.com/perennials/agastache/show/all"},
     {url: "https://www.americanmeadows.com/perennials/ajuga/show/all"},
@@ -138,7 +137,7 @@ var list = [
     {url: "https://www.americanmeadows.com/vegetables-seeds/cucumber-seeds/show/all"},
     {url: "https://www.americanmeadows.com/vegetables-seeds/corn-seeds/show/all"},
     {url: "https://www.americanmeadows.com/vegetables-seeds/cauliflower-seeds/show/all"},
-    {url: "https://www.americanmeadows.com/vegetables-seeds/cauliflower-seeds/show/all"},
+  //  {url: "https://www.americanmeadows.com/vegetables-seeds/cauliflower-seeds/show/all"},
     {url: "https://www.americanmeadows.com/vegetables-seeds/lettuce-seeds/show/all"},
     {url: "https://www.americanmeadows.com/vegetables-seeds/melon-seeds/show/all"},
     {url: "https://www.americanmeadows.com/vegetables-seeds/mustard-seeds/show/all"},
@@ -158,9 +157,10 @@ var list = [
     {url: "https://www.americanmeadows.com/vegetables-seeds/bulk-herb-seeds/show/all"}
     
 ];
+var promo_banner= [] ;
+var results=[] ;
+var count
 
-var results= {item: [] };
-var count=
 list.forEach(function(index,i){
 
 request(index.url, function (error, response, html) {
@@ -171,27 +171,60 @@ request(index.url, function (error, response, html) {
       });
       
     } 
+    var banner= $('.promo-banner');
+    var bjson={banner: banner.text()};
+    var notdup=true;
+
+    promo_banner.forEach(function(index,i){
+    if(JSON.stringify(index)==JSON.stringify(bjson)){
+        notdup=false;
+        }
+    })
     
+    
+    if(banner.text()&&notdup){
+        promo_banner.push({banner: banner.text()})
+    }
+    //console.log(promo_banner.text()+"\n")
     var product = $('span.price').each(function(i, elem) {
         var a = $(this).prev();
         var product_shop = a.parent().parent().parent().parent().parent().attr();
-        var title = a.parent().parent().parent().siblings().children().children().attr('title')
+        var title = a.parent().parent().parent().siblings().children().children().attr('title');
         var sale_price = a.siblings().text();
-        var old_price = a.parent().siblings().text()
+        var old_price = a.parent().siblings().text();
+        var url = a.parent().parent().parent().siblings().next().next().children().children().attr('href');
+        //console.log(url.text())
+        //console.log(url)
+        
         
         if(title){
             
-            results.item.push({"title": title,"sale_price": sale_price,"old_price": old_price})
+            results.push({"title": title,"sale_price": sale_price,"old_price": old_price,"url": url})
             //console.log(results);
         }
         
     });
     if(i===list.length -1){
-        fs.writeFile("./results.json", JSON.stringify(results), function(err) {
-                    if(err) {
-                        return console.log(err);
-                    }   
-                });
+
+        var json2csvCallback = function (err, csv) {
+            if (err) throw err;
+           
+            fs.writeFile("./results.csv", csv, function(err) {
+                if(err) {
+                    return console.log(err);
+                }   
+            });
+
+        };
+        
+        converter.json2csv(results, json2csvCallback);
+         
+        
+        fs.writeFile("./banners.json", JSON.stringify(promo_banner), function(err) {
+                if(err) {
+                    return console.log(err);
+                }   
+            });
     }
     }); 
     

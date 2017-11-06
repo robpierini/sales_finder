@@ -4,8 +4,12 @@
   "description": "web scraper",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js ",
+    "start": "del results.json && node index.js ",
     "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/robpierini/sales_finder"
   },
   "author": "Rob",
   "license": "ISC",
