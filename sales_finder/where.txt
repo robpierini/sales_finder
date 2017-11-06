@@ -1,0 +1,35 @@
+body (in body called something else)
+
+wrapper
+
+page
+
+
+main container
+div id = "col-main" class= "col-main"
+
+
+mb-content
+
+mb-category-products
+
+category-view
+
+category-product
+
+product-list
+
+broken up in to javascripts with details and item class item even
+
+(if sale)
+ product-secondary 
+prive-box
+has old price and special price
+
+(for name)
+product-shop
+product-primary
+product-name
+title=
+
+
